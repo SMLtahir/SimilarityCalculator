@@ -30,7 +30,7 @@ class PopularityIdfTagWeighting(TagWeighting):
 
     def get_weight(self, tag):
         if not self.weighted:
-            if self.weightsDict is None:
+            if len(self.weightsDict) == 0:
                 return 1
             else:
                 return self.weightsDict[tag]
