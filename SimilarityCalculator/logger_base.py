@@ -3,7 +3,6 @@ import logging
 
 
 class LoggerBase:
-
     def __init__(self, module_name):
 
         try:
@@ -27,5 +26,6 @@ class LoggerBase:
             self.logger.addHandler(fh)
             self.logger.addHandler(ch)
         except IOError, e:
-            print 'There was an error logging data into the log file.'
+            print 'There was an error logging data into the log file. ' \
+                  'Please check the log files or the logger_base module in debug mode to see where the error may be.'
             sys.exit()

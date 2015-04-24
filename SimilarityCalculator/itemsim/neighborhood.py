@@ -6,7 +6,6 @@ class Neighborhood():
         self.itemId = itemId
         self.neighborSimilarity = neighborSimilarity
 
-
     def compute(self, allItems, similarityFunction, minSimilarity=None, size=None):
         assert minSimilarity == None or size == None, 'Must choose neighborhood based on size or similarity'
         self.similarityFunction = similarityFunction
@@ -44,19 +43,3 @@ class Neighborhood():
 
     def getSimilarityDesc(self, neighbor):
         return self.similarityFunction.getSimilarityDesc(self.itemId, neighbor)
-
-    def getDesc(self, itemDb):
-        header = '%s (%s) %s\n' % (itemDb.getTitle(self.itemId), self.itemId,
-                                   self.similarityFunction.getSimilarityDesc(self.itemId, self.itemId))
-        details = '\n'.join(['%.3f %s (%s) %s' % (self.getSimilarity(neighbor), itemDb.getTitle(neighbor), neighbor,
-                                                  self.getSimilarityDesc(neighbor)) for neighbor in
-                             self.getNeighbors()])
-        return header + details
-
-    def getDescShort(self, itemDb):
-        header = '%s (%s)\n' % (itemDb.getTitle(self.itemId), self.itemId)
-        details = '\n'.join(
-            ['%d %.3f %s (%s)' % (index, self.getSimilarity(neighbor), itemDb.getTitle(neighbor), neighbor) for
-             index, neighbor in enumerate(self.getNeighbors())])
-        return header + details
-

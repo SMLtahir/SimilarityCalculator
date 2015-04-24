@@ -2,7 +2,6 @@ class TagWeighting:
     def getWeight(self, tag):
         pass
 
-# Some imports have been moved within the code to disconnect this module from the database unless actually required
 import math
 
 DEFAULT_FREQ = 10
@@ -31,5 +30,5 @@ class PopularityIdfTagWeighting(TagWeighting):
             else:
                 return self.weightsDict[tag]
         else:
-            return self.popTransform(self.tagEvents.getNumDistinctTaggers(tag)) / self.idfTransform(
-                self.docFreqByTag.get(tag, DEFAULT_FREQ) + LOG_SHIFT)
+            print "Added functionality to be added here."
+            return 1

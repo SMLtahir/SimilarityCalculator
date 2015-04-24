@@ -6,7 +6,6 @@ class TagDnaSim(SimilarityFunction):
         self.tagGenome = tagGenome
         self.kernelFunction = weightedComponentBasedKernel
 
-
     def getSimilarity(self, itemId1, itemId2):
         tagDna1 = self.tagGenome.getTagDna(itemId1)
         tagDna2 = self.tagGenome.getTagDna(itemId2)

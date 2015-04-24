@@ -1,4 +1,3 @@
-# Some imports have been moved within the code to disconnect this module from the database unless actually required
 import math
 
 

@@ -17,7 +17,6 @@ class TagGenome:
     def getTags(self):
         return self.tags
 
-
     def getTagDna(self, itemId):
         return self.tagDnas[itemId]
 
