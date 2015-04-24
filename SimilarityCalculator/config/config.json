@@ -1,0 +1,6 @@
+{
+        "FILE_RELEVANCE_PREDICTIONS": "data/relevance_predictions.txt",
+        "FILE_TAG_WEIGHTS": "data/tagWeights.txt",
+        "FILE_NEIGHBORS": "data/neighbors.txt",
+        "NEIGHBORHOOD_SIZE": 250
+}
