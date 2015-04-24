@@ -18,40 +18,40 @@ def run():
     global tagDnaSim
     load_configuration()
     load_logger()
-    logger.info("LoadNeighbors module starting\nMaking tagRel object...")
-    print "LoadNeighbors module starting\nMaking tagRel object...", time.strftime('%x %X')
+    logger.info("LoadNeighbors module starting\nMaking tag_rel object...")
+    print "LoadNeighbors module starting\nMaking tag_rel object...", time.strftime('%x %X')
 
-    # Makes a tagRel object that contains lists of tags, items, an array of itemTagRelevance[itemId] dictionaries
+    # Makes a tag_rel object that contains lists of tags, items, an array of itemTagRelevance[itemId] dictionaries
     # that maps a tag to its relevance score for a particular item
-    tagRel = tagrel.TagRel(conf["FILE_RELEVANCE_PREDICTIONS"], normalize=True)
+    tag_rel = tagrel.TagRel(conf["FILE_RELEVANCE_PREDICTIONS"], normalize=True)
     # For testing purposes use below with desired itemIDs
     # includeItems = [1,4886,6377]
-    # tagRel = tagrel.TagRel(conf["FILE_RELEVANCE_PREDICTIONS"], includeItems, normalize=True, testMode=True)
+    # tag_rel = tagrel.TagRel(conf["FILE_RELEVANCE_PREDICTIONS"], includeItems, normalize=True, testMode=True)
 
-    logger.info("Starting tagWeighting...")
-    print "Starting tagWeighting...", time.strftime('%x %X')
+    logger.info("Starting tag_weighting...")
+    print "Starting tag_weighting...", time.strftime('%x %X')
     # Does a type of tfidf weighting using docFrequencies and number of distinct taggers per tag per item
-    tagWeighting = PopularityIdfTagWeighting(tagRel, weighted=False, weightsDictionaryPath=conf["FILE_TAG_WEIGHTS"])
+    tag_weighting = PopularityIdfTagWeighting(tag_rel, weighted=False, weights_dictionary_path=conf["FILE_TAG_WEIGHTS"])
 
-    logger.info("Building tagGenome...")
-    print "Building tagGenome...", time.strftime('%x %X')
-    # Makes a tagGenome object that contains a list of tags, a map of weights to corresponding tags
+    logger.info("Building tag_genome...")
+    print "Building tag_genome...", time.strftime('%x %X')
+    # Makes a tag_genome object that contains a list of tags, a map of weights to corresponding tags
     # and a tagDna dictionary that maps every item to its corresponding vector of tag relevance scores
-    tagGenome = TagGenome(tagRel, tagWeighting)
+    tag_genome = TagGenome(tag_rel, tag_weighting)
 
-    logger.info("Building kernelFunction...")
-    print "Building kernelFunction...", time.strftime('%x %X')
-    # the kernelFunction passes weights and two boolean values telling further processes to normalize the weights
-    kernelFunction = WeightedCosineKernel(tagGenome.getWeights(), True, True)
+    logger.info("Building kernel_function...")
+    print "Building kernel_function...", time.strftime('%x %X')
+    # the kernel_function passes weights and two boolean values telling further processes to normalize the weights
+    kernel_function = WeightedCosineKernel(tag_genome.get_weights(), True, True)
 
     logger.info("Building tagDnaSim...")
     print "Building tagDnaSim...", time.strftime('%x %X')
-    # Combines the tagGenome and the kernelFunction into one object that has methods to compute similarities
-    tagDnaSim = TagDnaSim(tagGenome, kernelFunction)
+    # Combines the tag_genome and the kernel_function into one object that has methods to compute similarities
+    tagDnaSim = TagDnaSim(tag_genome, kernel_function)
 
     # Get list of items
     global items
-    items = tagRel.getItems()
+    items = tag_rel.get_items()
 
     logger.info("Writing neighbors and similarities to file...")
     print "Writing neighbors and similarities to file...", time.strftime('%x %X')
@@ -67,11 +67,11 @@ def run():
     print "LoadNeighbors module successfully completed...", time.strftime('%x %X')
 
 
-def run_in_parallel(itemId):
-    n = Neighborhood(itemId)
+def run_in_parallel(item_id):
+    n = Neighborhood(item_id)
     n.compute(items, tagDnaSim, size=conf["NEIGHBORHOOD_SIZE"])
     return(
-        ''.join(['%d\t%d\t%.4f\n' % (itemId, neighbor, sim) for neighbor, sim in n.getNeighborsAndSim()]))
+        ''.join(['%d\t%d\t%.4f\n' % (item_id, neighbor, sim) for neighbor, sim in n.get_neighbors_and_sim()]))
 
 
 def load_configuration():

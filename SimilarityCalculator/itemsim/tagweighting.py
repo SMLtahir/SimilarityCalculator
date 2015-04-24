@@ -1,6 +1,10 @@
 class TagWeighting:
-    def getWeight(self, tag):
+    def __init__(self):
         pass
+
+    def get_weight(self, tag):
+        pass
+
 
 import math
 
@@ -9,21 +13,22 @@ LOG_SHIFT = 1
 
 
 class PopularityIdfTagWeighting(TagWeighting):
-    def __init__(self, tagRel, popTransform=math.log, idfTransform=math.log, weighted=True, weightsDictionaryPath=None):
+    def __init__(self, tag_rel, pop_transform=math.log, idf_transform=math.log, weighted=True,
+                 weights_dictionary_path=None):
         self.weighted = weighted
         self.weightsDict = {}
-        if weightsDictionaryPath is not None:
-            firstLine = True
-            for line in open(weightsDictionaryPath, 'r'):
-                if firstLine:
-                    firstLine = False
+        if weights_dictionary_path is not None:
+            first_line = True
+            for line in open(weights_dictionary_path, 'r'):
+                if first_line:
+                    first_line = False
                     continue
-                vals = line.strip().split('\t')
-                tag = vals[0]
-                weight = int(vals[1])
+                values = line.strip().split('\t')
+                tag = values[0]
+                weight = int(values[1])
                 self.weightsDict[tag] = weight
 
-    def getWeight(self, tag):
+    def get_weight(self, tag):
         if not self.weighted:
             if self.weightsDict is None:
                 return 1

@@ -2,161 +2,161 @@ import math
 
 
 class TagRel:
-    def __init__(self, fileName, includeItems=None, subtractTagMean=False, divideByStdDev=False, addPeopleTags=False,
-                 normalize=False, testMode=False):
+    def __init__(self, file_name, include_items=None, subtract_tag_mean=False, divide_by_std_dev=False,
+                 add_people_tags=False, normalize=False, test_mode=False):
 
         self.itemTagRelevance = {}
-        distinctTags = set()
+        distinct_tags = set()
 
-        if subtractTagMean or divideByStdDev or addPeopleTags:
-            tagRelevanceSum = {}
-            tagRelevanceCount = {}
-            if testMode:
-                tagRelevanceData = self._getTagRelevanceData(fileName, addPeopleTags, includeItems)
+        if subtract_tag_mean or divide_by_std_dev or add_people_tags:
+            tag_relevance_sum = {}
+            tag_relevance_count = {}
+            if test_mode:
+                tag_relevance_data = self._get_tag_relevance_data(file_name, add_people_tags, include_items)
             else:
-                tagRelevanceData = self._getTagRelevanceData(fileName, addPeopleTags)
+                tag_relevance_data = self._get_tag_relevance_data(file_name, add_people_tags)
 
-            for itemId, tag, relevance in tagRelevanceData:
+            for item_id, tag, relevance in tag_relevance_data:
                 if normalize:
                     relevance = (relevance - 1) / 4
-                if itemId not in self.itemTagRelevance:
-                    self.itemTagRelevance[itemId] = {}
-                self.itemTagRelevance[itemId][tag] = relevance
-                distinctTags.add(tag)
-                if tag not in tagRelevanceSum:
-                    tagRelevanceSum[tag] = 0.0
-                    tagRelevanceCount[tag] = 0
-                tagRelevanceSum[tag] += relevance
-                tagRelevanceCount[tag] += 1
-            if subtractTagMean:
-                tagRelevanceMean = dict(
-                    [(tag, tagRelevanceSum[tag] / tagRelevanceCount[tag]) for tag in tagRelevanceSum])
+                if item_id not in self.itemTagRelevance:
+                    self.itemTagRelevance[item_id] = {}
+                self.itemTagRelevance[item_id][tag] = relevance
+                distinct_tags.add(tag)
+                if tag not in tag_relevance_sum:
+                    tag_relevance_sum[tag] = 0.0
+                    tag_relevance_count[tag] = 0
+                tag_relevance_sum[tag] += relevance
+                tag_relevance_count[tag] += 1
+            if subtract_tag_mean:
+                tag_relevance_mean = dict(
+                    [(tag, tag_relevance_sum[tag] / tag_relevance_count[tag]) for tag in tag_relevance_sum])
                 for item in self.itemTagRelevance.keys():
-                    self.itemTagRelevance[item] = dict([(tag, relevance - tagRelevanceMean[tag]) for tag, relevance in
-                                                          self.itemTagRelevance[item].items()])
-            if divideByStdDev:
-                tagVarianceSum = {}
-                for itemId, tag, relevance in tagRelevanceData:
-                    if tag not in tagVarianceSum:
-                        tagVarianceSum[tag] = 0.0
-                    tagVarianceSum[tag] += (relevance - tagRelevanceMean[tag]) ** 2
-                tagRelevanceStdDev = dict(
-                    [(tag, math.sqrt(tagVarianceSum[tag] / tagRelevanceCount[tag])) for tag in tagVarianceSum])
+                    self.itemTagRelevance[item] = dict([(tag, relevance - tag_relevance_mean[tag]) for tag, relevance in
+                                                        self.itemTagRelevance[item].items()])
+            if divide_by_std_dev:
+                tag_variance_sum = {}
+                for item_id, tag, relevance in tag_relevance_data:
+                    if tag not in tag_variance_sum:
+                        tag_variance_sum[tag] = 0.0
+                    tag_variance_sum[tag] += (relevance - tag_relevance_mean[tag]) ** 2
+                tag_relevance_std_dev = dict(
+                    [(tag, math.sqrt(tag_variance_sum[tag] / tag_relevance_count[tag])) for tag in tag_variance_sum])
                 for item in self.itemTagRelevance.keys():
                     self.itemTagRelevance[item] = dict(
-                        [(tag, relevance / tagRelevanceStdDev[tag]) for tag, relevance in
+                        [(tag, relevance / tag_relevance_std_dev[tag]) for tag, relevance in
                          self.itemTagRelevance[item].items()])
         else:
-            # Avoid parsing the first line (header)
-            firstLine = True
-            if testMode:
-                for line in open(fileName):
-                    if firstLine:
-                        firstLine = False
+            # Avoid parsing the first line (file header)
+            first_line = True
+            if test_mode:
+                for line in open(file_name):
+                    if first_line:
+                        first_line = False
                         continue
-                    vals = line.strip().split('\t')
-                    itemId = int(vals[0])
-                    if includeItems.count(itemId) > 0:
-                        tag = vals[1].replace("\"", "")
-                        if vals[2] == 'NA':
+                    values = line.strip().split('\t')
+                    item_id = int(values[0])
+                    if include_items.count(item_id) > 0:
+                        tag = values[1].replace("\"", "")
+                        if values[2] == 'NA':
                             continue
-                        relevance = float(vals[2])
+                        relevance = float(values[2])
                         if normalize:
                             relevance = (relevance - 1) / 4
-                        if itemId not in self.itemTagRelevance:
-                            self.itemTagRelevance[itemId] = {}
-                        self.itemTagRelevance[itemId][tag] = relevance
-                        distinctTags.add(tag)
+                        if item_id not in self.itemTagRelevance:
+                            self.itemTagRelevance[item_id] = {}
+                        self.itemTagRelevance[item_id][tag] = relevance
+                        distinct_tags.add(tag)
             else:
-                for line in open(fileName):
-                    if firstLine:
-                        firstLine = False
+                for line in open(file_name):
+                    if first_line:
+                        first_line = False
                         continue
-                    vals = line.strip().split('\t')
-                    itemId = int(vals[0])
-                    tag = vals[1].replace("\"", "")
-                    if vals[2] == 'NA':
+                    values = line.strip().split('\t')
+                    item_id = int(values[0])
+                    tag = values[1].replace("\"", "")
+                    if values[2] == 'NA':
                         continue
-                    relevance = float(vals[2])
+                    relevance = float(values[2])
                     if normalize:
                         relevance = (relevance - 1) / 4
-                    if itemId not in self.itemTagRelevance:
-                        self.itemTagRelevance[itemId] = {}
-                    self.itemTagRelevance[itemId][tag] = relevance
-                    distinctTags.add(tag)
+                    if item_id not in self.itemTagRelevance:
+                        self.itemTagRelevance[item_id] = {}
+                    self.itemTagRelevance[item_id][tag] = relevance
+                    distinct_tags.add(tag)
 
-        self.tags = list(distinctTags)
+        self.tags = list(distinct_tags)
         self.items = self.itemTagRelevance.keys()
 
-    def _getTagRelevanceData(self, fileName, addPeopleTags, includeItems=None):
-        tagRelevanceData = []
-        firstLine = True
-        relItems = set()
-        relTags = set()
-        if includeItems != None:
-            for line in open(fileName):
-                if firstLine:
-                    firstLine = False
+    def _get_tag_relevance_data(self, file_name, include_items=None):
+        tag_relevance_data = []
+        first_line = True
+        rel_items = set()
+        rel_tags = set()
+        if include_items is not None:
+            for line in open(file_name):
+                if first_line:
+                    first_line = False
                     continue
-                vals = line.strip().split('\t')
-                itemId = int(vals[0])
-                tag = vals[1].replace("\"", "")
-                if vals[2] == 'NA':
+                values = line.strip().split('\t')
+                item_id = int(values[0])
+                tag = values[1].replace("\"", "")
+                if values[2] == 'NA':
                     continue
-                if includeItems.count(itemId) > 0:
-                    relItems.add(itemId)
-                    relTags.add(tag)
-                    relevance = float(vals[2])
-                    tagRelevanceData.append((itemId, tag, relevance))
+                if include_items.count(item_id) > 0:
+                    rel_items.add(item_id)
+                    rel_tags.add(tag)
+                    relevance = float(values[2])
+                    tag_relevance_data.append((item_id, tag, relevance))
         else:
-            for line in open(fileName):
-                if firstLine:
-                    firstLine = False
+            for line in open(file_name):
+                if first_line:
+                    first_line = False
                     continue
-                vals = line.strip().split('\t')
-                itemId = int(vals[0])
-                tag = vals[1].replace("\"", "")
-                if vals[2] == 'NA':
+                values = line.strip().split('\t')
+                item_id = int(values[0])
+                tag = values[1].replace("\"", "")
+                if values[2] == 'NA':
                     continue
-                relItems.add(itemId)
-                relTags.add(tag)
-                relevance = float(vals[2])
-                tagRelevanceData.append((itemId, tag, relevance))
+                rel_items.add(item_id)
+                rel_tags.add(tag)
+                relevance = float(values[2])
+                tag_relevance_data.append((item_id, tag, relevance))
 
-        return tagRelevanceData
+        return tag_relevance_data
 
-    def getTagRel(self):
+    def get_tag_rel(self):
         return self.itemTagRelevance
 
-    def getTagRelForItem(self, itemId, subtractTagMean=False):
-        return self.itemTagRelevance[itemId]
+    def get_tag_rel_for_item(self, item_id):
+        return self.itemTagRelevance[item_id]
 
-    def getTagRelForItemTag(self, itemId, tag):
+    def get_tag_rel_for_item_tag(self, item_id, tag):
         try:
-            return self.itemTagRelevance[itemId][tag]
+            return self.itemTagRelevance[item_id][tag]
         except KeyError:
             return 0
 
-    def getTotalRelByTag(self):
-        totalRelByTag = {}
+    def get_total_rel_by_tag(self):
+        total_rel_by_tag = {}
         for tagRelevance in self.itemTagRelevance.values():
             for tag, relevance in tagRelevance.iteritems():
-                totalRelByTag[tag] = totalRelByTag.get(tag, 0) + relevance
-        return totalRelByTag
+                total_rel_by_tag[tag] = total_rel_by_tag.get(tag, 0) + relevance
+        return total_rel_by_tag
 
-    def getDocFreqs(self, threshold=3):
-        docFreqsByTag = {}
+    def get_doc_frequencies(self, threshold=3):
+        doc_frequencies_by_tag = {}
         for tagRelevance in self.itemTagRelevance.values():
             for tag, relevance in tagRelevance.iteritems():
                 if relevance >= threshold:
-                    docFreqsByTag[tag] = docFreqsByTag.get(tag, 0) + 1
-        return docFreqsByTag
+                    doc_frequencies_by_tag[tag] = doc_frequencies_by_tag.get(tag, 0) + 1
+        return doc_frequencies_by_tag
 
-    def getItems(self):
+    def get_items(self):
         return self.itemTagRelevance.keys()
 
-    def getTags(self):
+    def get_tags(self):
         return self.tags
 
-    def getTagRelVector(self, tag):
-        return [self.getTagRelForItemTag(itemId, tag) for itemId in self.items]
+    def get_tag_rel_vector(self, tag):
+        return [self.get_tag_rel_for_item_tag(itemId, tag) for itemId in self.items]

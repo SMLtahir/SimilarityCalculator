@@ -1,19 +1,19 @@
 class TagDna:
-    def __init__(self, tagGenome, relVector):
-        self.tagGenome = tagGenome
-        self.relVector = relVector
+    def __init__(self, tag_genome, rel_vector):
+        self.tagGenome = tag_genome
+        self.relVector = rel_vector
 
-    def getRelVector(self):
+    def get_rel_vector(self):
         return self.relVector
 
-    def getDesc(self, k=None, tagFilter=None, sortFunction=lambda x: x):
-        if tagFilter:
-            valName = [(rel, self.tagGenome.getTag(i)) for i, rel in enumerate(self.relVector) if
-                       tagFilter.passes(self.tagGenome.getTag(i))]
+    def get_description(self, k=None, tag_filter=None, sort_function=lambda x: x):
+        if tag_filter:
+            value_name = [(rel, self.tagGenome.get_tag(i)) for i, rel in enumerate(self.relVector) if
+                          tag_filter.passes(self.tagGenome.get_tag(i))]
         else:
-            valName = [(rel, self.tagGenome.getTag(i)) for i, rel in enumerate(self.relVector)]
-        valName.sort(key=lambda x: sortFunction(x[0]))
-        valName.reverse()
+            value_name = [(rel, self.tagGenome.get_tag(i)) for i, rel in enumerate(self.relVector)]
+        value_name.sort(key=lambda x: sort_function(x[0]))
+        value_name.reverse()
         if k:
-            valName = valName[0:k]
-        return '\n'.join(['%.3f %s' % (val, name) for val, name in valName])
+            value_name = value_name[0:k]
+        return '\n'.join(['%.3f %s' % (val, name) for val, name in value_name])

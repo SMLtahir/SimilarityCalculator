@@ -3,9 +3,11 @@
 
 class SimilarityFunction:
 
-    def getSimilarity(self, itemId1, itemId2):
+    def __init__(self):
+        pass
+
+    def get_similarity(self, item_id1, item_id2):
         pass
     
-    def getSimilarityDesc(self, itemId1, itemId2):
+    def get_similarity_description(self, item_id1, item_id2):
         return ""
-    

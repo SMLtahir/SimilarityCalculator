@@ -2,20 +2,21 @@ from similarityfunction import SimilarityFunction
 
 
 class TagDnaSim(SimilarityFunction):
-    def __init__(self, tagGenome, weightedComponentBasedKernel):
-        self.tagGenome = tagGenome
-        self.kernelFunction = weightedComponentBasedKernel
+    def __init__(self, tag_genome, weighted_component_based_kernel):
+        self.tagGenome = tag_genome
+        self.kernelFunction = weighted_component_based_kernel
 
-    def getSimilarity(self, itemId1, itemId2):
-        tagDna1 = self.tagGenome.getTagDna(itemId1)
-        tagDna2 = self.tagGenome.getTagDna(itemId2)
-        return self.kernelFunction.getSim(tagDna1.getRelVector(), tagDna2.getRelVector())
+    def get_similarity(self, item_id1, item_id2):
+        tag_dna1 = self.tagGenome.get_tag_dna(item_id1)
+        tag_dna2 = self.tagGenome.get_tag_dna(item_id2)
+        return self.kernelFunction.get_sim(tag_dna1.get_rel_vector(), tag_dna2.get_rel_vector())
 
-    def getSimilarityDesc(self, itemId1, itemId2, numTagsShow=15):
-        tagDna1 = self.tagGenome.getTagDna(itemId1)
-        tagDna2 = self.tagGenome.getTagDna(itemId2)
-        components = self.kernelFunction.getComponentsAndWeights(tagDna1.getRelVector(), tagDna2.getRelVector())
+    def get_similarity_description(self, item_id1, item_id2, num_tags_show=15):
+        tag_dna1 = self.tagGenome.get_tag_dna(item_id1)
+        tag_dna2 = self.tagGenome.get_tag_dna(item_id2)
+        components = self.kernelFunction.get_components_and_weights(tag_dna1.get_rel_vector(), tag_dna2.get_rel_vector())
         components.sort()
         components.reverse()
-        simDetail = [(self.tagGenome.getTag(i), val , weight) for i, (val, weight) in enumerate(components[0:numTagsShow])]
-        return ', '.join(['%s: %.2f(%.2f)'%(tag, val, weight) for tag, val, weight in simDetail])
+        sim_detail = [(self.tagGenome.get_tag(i), val, weight) for i, (val, weight) in
+                      enumerate(components[0:num_tags_show])]
+        return ', '.join(['%s: %.2f(%.2f)' % (tag, val, weight) for tag, val, weight in sim_detail])
