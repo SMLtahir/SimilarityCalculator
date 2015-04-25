@@ -1,14 +1,15 @@
-include .env
-
-PYTHON = $(ANACONDA_BINDIR)/python
+-include .env
+export PYTHON=$(PYTHONPATH)/python
 
 all: load_neighbors
 
 load_neighbors:
-	$(PYTHON) load_neighbors.py
+        $(PYTHON) load_neighbors.py
 
-.PHONY: clean load_neighbors
+unit_tests:
+        $(PYTHON) $(SIMCALC_HOME)/test/unit_tests_load_neighbors.py
+
+.PHONY: clean load_neighbors unit_tests
 
 clean:
-	rm -rf data/*
-
+        rm -rf data/*
