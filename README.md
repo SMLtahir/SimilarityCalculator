@@ -3,9 +3,9 @@
 *Python open source package that computes similarities between a list of items based on their tag relevance scores 
 and prints the top neighbors of each item to file.* 
 
-## Set **PYTHONPATH** environment variable to your Python bin directory
+#### Set **PYTHONPATH** environment variable to your Python bin directory
 
-## Set **SIMCALC_HOME** in config.local.json
+#### Set **SIMCALC_HOME** in config.local.json
 In SimilarityCalculator/config/ directory, create file config.local.json and paste,
 
 ```
