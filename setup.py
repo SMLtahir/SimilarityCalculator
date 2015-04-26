@@ -10,5 +10,13 @@ setup(
     url='https://github.com/SMLtahir/SimilarityCalculator',
     download_url='https://github.com/peterldowns/mypackage/tarball/0.1',  # I'll explain this in a second
     keywords=['similarity', 'neighbor', 'neighborhood'],
-    classifiers=[],
+    classifiers=[
+        "Development Status :: 4 - Beta",
+        "Intended Audience :: Developers",
+        "Intended Audience :: Science/Research",
+        "License :: Public Domain",
+        "Natural Language :: English",
+        "Programming Language :: Python :: 2.7",
+        "Topic :: Scientific/Engineering",
+    ],
 )
