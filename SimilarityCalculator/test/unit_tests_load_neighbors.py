@@ -2,8 +2,8 @@ import sys
 import os
 import unittest
 import math
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-
+sys.path.insert(0, os.path.dirname(os.path.dirname((os.path.abspath(__file__)))))
+print "SysPath: ", sys.path
 
 from vectorlib.kernel import WeightedCosineKernel
 from vectorlib.vector import Vector
