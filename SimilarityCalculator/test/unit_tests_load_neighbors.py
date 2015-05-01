@@ -2,13 +2,7 @@ import sys
 import os
 import unittest
 import math
-
-try:
-    sys.path.append(os.environ.get('SIMCALC_HOME'))
-    assert os.environ.get('SIMCALC_HOME') is not None
-except AssertionError, e:
-    print "Please set the SIMCALC_HOME environment variable correctly."
-    exit()
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 
 from vectorlib.kernel import WeightedCosineKernel
