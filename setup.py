@@ -1,4 +1,4 @@
-from distutils.core import setup, Command
+from setuptools import setup, Command
 from codecs import open
 
 with open('README.md', encoding='utf-8') as f:
