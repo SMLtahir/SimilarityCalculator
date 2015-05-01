@@ -3,6 +3,10 @@
 *Python open source package that computes similarities between a list of items based on their tag relevance scores 
 and prints the top neighbors of each item to file.* 
 
+##### Travis CI Testing status 
+
+[![Build Status](https://travis-ci.org/SMLtahir/SimilarityCalculator.svg?branch=master)](https://travis-ci.org/SMLtahir/SimilarityCalculator)
+
 ##### Set **PYTHONPATH** environment variable to your Python bin directory
 
 ##### Set **SIMCALC_HOME** in config.local.json:
