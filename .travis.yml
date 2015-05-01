@@ -12,6 +12,6 @@ install:
  - pip install .
  - pip install -r requirements.txt
 # command to run tests
-script: make -C SimilarityCalculator/ test
+script: python SimilarityCalculator/test/unit_tests_load_neighbors.py
 # To specify environment variables, use the env key. Example:
 # env: PYTHONPATH=/some_path/here
