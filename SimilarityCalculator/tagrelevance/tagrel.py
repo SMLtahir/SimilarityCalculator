@@ -2,8 +2,8 @@ import math
 
 
 class TagRel:
-    def __init__(self, file_name, include_items=None, subtract_tag_mean=False, divide_by_std_dev=False,
-                 add_people_tags=False, normalize=False, test_mode=False):
+    def __init__(self, file_name, field_separator='\t', include_items=None, subtract_tag_mean=False,
+                 divide_by_std_dev=False, add_people_tags=False, normalize=False, test_mode=False):
 
         self.itemTagRelevance = {}
         distinct_tags = set()
@@ -12,9 +12,11 @@ class TagRel:
             tag_relevance_sum = {}
             tag_relevance_count = {}
             if test_mode:
-                tag_relevance_data = self._get_tag_relevance_data(file_name, add_people_tags, include_items)
+                tag_relevance_data = self._get_tag_relevance_data(file_name, add_people_tags, include_items,
+                                                                  field_separator=field_separator)
             else:
-                tag_relevance_data = self._get_tag_relevance_data(file_name, add_people_tags)
+                tag_relevance_data = self._get_tag_relevance_data(file_name, add_people_tags,
+                                                                  field_separator=field_separator)
 
             for item_id, tag, relevance in tag_relevance_data:
                 if normalize:
@@ -54,7 +56,7 @@ class TagRel:
                     if first_line:
                         first_line = False
                         continue
-                    values = line.strip().split('\t')
+                    values = line.strip().split(field_separator)
                     item_id = int(values[0])
                     if include_items.count(item_id) > 0:
                         tag = values[1].replace("\"", "")
@@ -72,7 +74,7 @@ class TagRel:
                     if first_line:
                         first_line = False
                         continue
-                    values = line.strip().split('\t')
+                    values = line.strip().split(field_separator)
                     item_id = int(values[0])
                     tag = values[1].replace("\"", "")
                     if values[2] == 'NA':
@@ -88,7 +90,7 @@ class TagRel:
         self.tags = list(distinct_tags)
         self.items = self.itemTagRelevance.keys()
 
-    def _get_tag_relevance_data(self, file_name, include_items=None):
+    def _get_tag_relevance_data(self, file_name, field_separator='\t', include_items=None):
         tag_relevance_data = []
         first_line = True
         rel_items = set()
@@ -98,7 +100,7 @@ class TagRel:
                 if first_line:
                     first_line = False
                     continue
-                values = line.strip().split('\t')
+                values = line.strip().split(field_separator)
                 item_id = int(values[0])
                 tag = values[1].replace("\"", "")
                 if values[2] == 'NA':
@@ -113,7 +115,7 @@ class TagRel:
                 if first_line:
                     first_line = False
                     continue
-                values = line.strip().split('\t')
+                values = line.strip().split(field_separator)
                 item_id = int(values[0])
                 tag = values[1].replace("\"", "")
                 if values[2] == 'NA':

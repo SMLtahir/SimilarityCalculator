@@ -23,7 +23,8 @@ def run():
 
     # Makes a tag_rel object that contains lists of tags, items, an array of itemTagRelevance[itemId] dictionaries
     # that maps a tag to its relevance score for a particular item
-    tag_rel = tagrel.TagRel(conf["FILE_RELEVANCE_PREDICTIONS"], normalize=True)
+    tag_rel = tagrel.TagRel(conf["FILE_RELEVANCE_PREDICTIONS"], field_separator=conf["INPUT_FIELD_SEPARATOR"],
+                            normalize=True)
     # For testing purposes use below with desired itemIDs
     # includeItems = [1,4886,6377]
     # tag_rel = tagrel.TagRel(conf["FILE_RELEVANCE_PREDICTIONS"], includeItems, normalize=True, testMode=True)
@@ -31,7 +32,7 @@ def run():
     logger.info("Starting tag_weighting...")
     print "Starting tag_weighting...", time.strftime('%x %X')
     # Does a type of tfidf weighting using docFrequencies and number of distinct taggers per tag per item
-    tag_weighting = PopularityIdfTagWeighting(tag_rel, weighted=False, weights_dictionary_path=conf["FILE_TAG_WEIGHTS"])
+    tag_weighting = PopularityIdfTagWeighting(weighted=True, weights_dictionary_path=conf["FILE_TAG_WEIGHTS"])
 
     logger.info("Building tag_genome...")
     print "Building tag_genome...", time.strftime('%x %X')
@@ -70,7 +71,7 @@ def run():
 def run_in_parallel(item_id):
     n = Neighborhood(item_id)
     n.compute(items, tagDnaSim, size=conf["NEIGHBORHOOD_SIZE"])
-    return(
+    return (
         ''.join(['%d\t%d\t%.4f\n' % (item_id, neighbor, sim) for neighbor, sim in n.get_neighbors_and_sim()]))
 
 
