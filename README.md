@@ -12,6 +12,10 @@ unit tests on the latest code pushed to Github and displays a badge indicating *
 **Build_Failing**. Since this project is currently under continuous development, it is suggested however to use only 
 stable builds released as code versions.
 
+##### Compatible with Python versions
+
+SimilarityCalculator currently runs on Python versions: *2.6*, *2.7*, *pypy*
+
 ##### How to run:
 
 First, set **PYTHONPATH** environment variable to your Python bin directory
@@ -85,8 +89,7 @@ The following parameters are to be modified as desired in these files.
             
     This is used to indicate the number of CPUs to be used in parallel by the program. If not changed by the user, 
     the default is "MAX" which means that maximum available CPUs will be used for computation. Use this option for 
-    large datasets and when speedy computation is required. An example of another value as it would appear in the 
-    config file would be,
+    large datasets and when speedy computation is required. Minimum value for this parameter is 1.
         
 2. **FILE_RELEVANCE_PREDICTIONS**
 
