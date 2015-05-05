@@ -12,26 +12,11 @@ unit tests on the latest code pushed to Github and displays a badge indicating *
 **Build_Failing**. Since this project is currently under continuous development, it is suggested however to use only 
 stable builds released as code versions.
 
-##### Set **PYTHONPATH** environment variable to your Python bin directory
-
-##### Set **SIMCALC_HOME** in config.local.json:
-In SimilarityCalculator/config/ directory, create file config.local.json and paste,
-
-```
-{
-
-        "SIMCALC_HOME": "<ROOT_DIRECTORY_OF_SimilarityCalculator>"
-}
-```
-
-If the file was already created and there are more entries, add a comma followed by this entry on the next line with same indentation.
-
-##### Local settings:
-Add file called "config.local.json" to config/ directory of project root directory
-In addition to existing "config.json" settings, this file is used to store private configuration settings like passwords
-
 ##### How to run:
-Runnable modules:
+
+First, set **PYTHONPATH** environment variable to your Python bin directory
+
+**Runnable modules**:
 
 - load_neighbors.py
 - test/unit_tests_load_neighbors.py
@@ -62,6 +47,12 @@ The SimilarityCalculator has been designed to run on maximum available CPUs and 
 over native Python. Due to this, it is extremely fast and efficient. In case the user wants less CPUs to be used during 
 similarity and nearest neighbor computation, the **NUMBER_OF_CPU** configurational parameter should be set appropriately.
 Its default value is **MAX**.
+
+        
+##### Similarity measures currently supported
+
+Currently, Similarity between items is calculated using the Cosine Similarity Measure. We are currently working to 
+extend the code to include more measures. 
 
 ##### Configuration Parameters
 
@@ -218,8 +209,8 @@ The following parameters are to be modified as desired in these files.
     
         "FILE_NEIGHBORS": "data/neighbors.txt"
         
-    This configuration parameter tells the program where to store the final output file. The format of the file produced
-    will be as below:
+    This configuration parameter tells the program where to store the final output file.  It is advised to store this in
+    the SimilarityCalculator/data/ directory as is done by default. The format of the file produced will be as below:
     
         itemId,neighbor1,Similarity_Score
         
@@ -251,9 +242,7 @@ The following parameters are to be modified as desired in these files.
         
     This determines the number of top neighbors that you would want the program to calculate per item. If this value is 
     set higher than the total number of items, all items will be printed along with their similarity scores as 
-    neighbors for every item.
-    
-    **More documentation has to be written below**
+    neighbors for every item. 
     
 8. **LOG_NAME**
 
@@ -264,7 +253,10 @@ The following parameters are to be modified as desired in these files.
     *Default entry*: 
     
         "LOG_NAME": "logs/load_neighbors.txt"            
-            
+   
+    This tells the program where to store the runtime logs of the program. It is advised to store this in the 
+    SimilarityCalculator/logs/ directory as is done by default.
+    
 9. **ITEM1_COLUMN_NO**
 
     *Example entry*:
@@ -275,6 +267,28 @@ The following parameters are to be modified as desired in these files.
     
         "ITEM1_COLUMN_NO": "1"
         
+    This parameter tells the program in which column of the .csv/ .tsv *RELEVANCE_PREDICTIONS* file it can find 
+    entities belonging to the itemId1 set (as defined earlier). It is particularly useful when the input file is a 
+    multi-column one not prepared specially as input for the SimilarityCalculator program.
+    
+    *Example*:
+    
+        MovieId,Budget,BoxOfficeSales,Genre,relevanceScore(GenreToMovieId)
+        1,87,76,"Action",0.50
+        1,87,76,"Comedy",0.75
+        2,45,30,"Action",0.67
+        2,45,30,"Comedy",0.30
+        3,95,110,"Action",0.98
+        3,95,110,"Comedy",0.10
+        
+    In this case, if we want to find the top-nearest neighbors of the different movies in our list, we would set
+      
+        "ITEM1_COLUMN_NO": "1"
+        "ITEM2_COLUMN_NO": "4"
+        "RELEVANCE_SCORE_COLUMN_NO": "5"
+        
+    For the description of the two other parameters shown in the example above, see their respective sections below.
+    
 10. **ITEM2_COLUMN_NO**
 
     *Example entry*:
@@ -285,6 +299,12 @@ The following parameters are to be modified as desired in these files.
     
         "ITEM2_COLUMN_NO": "2"
         
+    This parameter tells the program in which column of the .csv/ .tsv *RELEVANCE_PREDICTIONS* file it can find 
+    entities belonging to the itemId2 set (as defined earlier). It is particularly useful when the input file is a 
+    multi-column one not prepared specially as input for the SimilarityCalculator program.
+    
+    Please refer to the example above to see the usage of this parameter.
+    
 11. **RELEVANCE_SCORE_COLUMN_NO**
 
     *Example entry*:
@@ -294,7 +314,9 @@ The following parameters are to be modified as desired in these files.
     *Default entry*: 
     
         "RELEVANCE_SCORE_COLUMN_NO": "3"
+    
+    This parameter tells the program in which column of the .csv/ .tsv *RELEVANCE_PREDICTIONS* file it can find 
+    entities belonging to the relevance_score set (as defined earlier). It is particularly useful when the input file 
+    is a multi-column one not prepared specially as input for the SimilarityCalculator program.
         
-**Similarity measures currently supported**
-Currently, Similarity between items is calculated using the Cosine Similarity Measure. We are currently working to 
-extend the code to include more measures. 
+    Please refer to the example above to see the usage of this parameter.
