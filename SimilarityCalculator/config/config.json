@@ -1,13 +1,13 @@
 {
         "NUMBER_OF_CPU": "MAX",
-        "FILE_RELEVANCE_PREDICTIONS": "data/relevance_predictions.txt",
-        "INPUT_FIELD_SEPARATOR": ",",
+        "FILE_RELEVANCE_PREDICTIONS": "data/relevance_predictionsTest.txt",
+        "INPUT_FIELD_SEPARATOR": "\t",
         "TAG_WEIGHTED": "T",
         "FILE_TAG_WEIGHTS": "data/tagWeights.txt",
         "FILE_NEIGHBORS": "data/neighbors.txt",
         "NEIGHBORHOOD_SIZE": 250,
-        "LOG_NAME": "logs/load_neighbors.txt",
-        "ITEM1_COLUMN_NO": "1",
-        "ITEM2_COLUMN_NO": "2",
-        "RELEVANCE_SCORE_COLUMN_NO": "3"
+        "LOG_NAME": "logs/load_neighbors.log",
+        "ITEM1_COLUMN_NO": 0,
+        "ITEM2_COLUMN_NO": 1,
+        "RELEVANCE_SCORE_COLUMN_NO": 2
 }

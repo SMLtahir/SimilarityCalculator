@@ -17,13 +17,14 @@ from itemsim.neighborhood import Neighborhood
 def run():
     global tagDnaSim
     load_configuration()
-    load_logger()
+    load_logger(conf["LOG_NAME"])
     logger.info("LoadNeighbors module starting\nMaking tag_rel object...")
     print "LoadNeighbors module starting\nMaking tag_rel object...", time.strftime('%x %X')
 
     # Makes a tag_rel object that contains lists of tags, items, an array of itemTagRelevance[itemId] dictionaries
     # that maps a tag to its relevance score for a particular item
-    tag_rel = tagrel.TagRel(conf["FILE_RELEVANCE_PREDICTIONS"], field_separator=conf["INPUT_FIELD_SEPARATOR"],
+    columns = [conf["ITEM1_COLUMN_NO"], conf["ITEM2_COLUMN_NO"], conf["RELEVANCE_SCORE_COLUMN_NO"]]
+    tag_rel = tagrel.TagRel(conf["FILE_RELEVANCE_PREDICTIONS"], columns, field_separator=conf["INPUT_FIELD_SEPARATOR"],
                             normalize=True)
     # For testing purposes use below with desired itemIDs
     # includeItems = [1,4886,6377]
@@ -32,7 +33,11 @@ def run():
     logger.info("Starting tag_weighting...")
     print "Starting tag_weighting...", time.strftime('%x %X')
     # Does a type of tfidf weighting using docFrequencies and number of distinct taggers per tag per item
-    tag_weighting = PopularityIdfTagWeighting(weighted=True, weights_dictionary_path=conf["FILE_TAG_WEIGHTS"])
+    if conf["TAG_WEIGHTED"].lower() == 't' or conf["TAG_WEIGHTED"].lower() == 'true' or conf["TAG_WEIGHTED"]\
+            .lower() == 'y' or conf["TAG_WEIGHTED"].lower() == 'yes':
+        tag_weighting = PopularityIdfTagWeighting(weighted=True, weights_dictionary_path=conf["FILE_TAG_WEIGHTS"])
+    else:
+        tag_weighting = PopularityIdfTagWeighting(weighted=False)
 
     logger.info("Building tag_genome...")
     print "Building tag_genome...", time.strftime('%x %X')
@@ -59,7 +64,14 @@ def run():
 
     # Write tab separated: itemId, each top neighbor's itemId and similarity value into file
     # Run this in parallel processes
-    p = mp.Pool(mp.cpu_count())
+    cpu = conf["NUMBER_OF_CPU"]
+    if cpu < 1:
+        print "\n\nERROR! NUMBER_OF_CPU config parameter must be set to at least 1.\n\n"
+        exit()
+    if cpu == "MAX":
+        p = mp.Pool(mp.cpu_count())
+    else:
+        p = mp.Pool(cpu)
     with open(conf["FILE_NEIGHBORS"], 'w') as f:
         for result in p.imap(run_in_parallel, items):
             f.write(result)
@@ -93,15 +105,14 @@ def load_configuration():
         json_loc_conf.close()
 
 
-def load_logger():
+def load_logger(file_name):
     try:
         global logger
-        module_name = "load_neighbors"
         logger = logging.getLogger('| SIM_CALC |')
         logger.setLevel(logging.DEBUG)
 
         # create file handler for logging
-        fh = logging.FileHandler('logs/' + module_name + '.log')
+        fh = logging.FileHandler(file_name)
         fh.setLevel(logging.INFO)
 
         # create console handler with a higher log level

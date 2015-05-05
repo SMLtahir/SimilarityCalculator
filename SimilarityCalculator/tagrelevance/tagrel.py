@@ -2,20 +2,20 @@ import math
 
 
 class TagRel:
-    def __init__(self, file_name, field_separator='\t', include_items=None, subtract_tag_mean=False,
-                 divide_by_std_dev=False, add_people_tags=False, normalize=False, test_mode=False):
+    def __init__(self, file_name, columns, field_separator='\t', include_items=None, subtract_tag_mean=False,
+                 divide_by_std_dev=False, normalize=False, test_mode=False):
 
         self.itemTagRelevance = {}
         distinct_tags = set()
 
-        if subtract_tag_mean or divide_by_std_dev or add_people_tags:
+        if subtract_tag_mean or divide_by_std_dev:
             tag_relevance_sum = {}
             tag_relevance_count = {}
             if test_mode:
-                tag_relevance_data = self._get_tag_relevance_data(file_name, add_people_tags, include_items,
+                tag_relevance_data = self._get_tag_relevance_data(file_name, columns, include_items,
                                                                   field_separator=field_separator)
             else:
-                tag_relevance_data = self._get_tag_relevance_data(file_name, add_people_tags,
+                tag_relevance_data = self._get_tag_relevance_data(file_name, columns,
                                                                   field_separator=field_separator)
 
             for item_id, tag, relevance in tag_relevance_data:
@@ -57,12 +57,12 @@ class TagRel:
                         first_line = False
                         continue
                     values = line.strip().split(field_separator)
-                    item_id = int(values[0])
+                    item_id = int(values[columns[0]])
                     if include_items.count(item_id) > 0:
-                        tag = values[1].replace("\"", "")
-                        if values[2] == 'NA':
+                        tag = values[columns[1]].replace("\"", "")
+                        if values[columns[2]] == 'NA':
                             continue
-                        relevance = float(values[2])
+                        relevance = float(values[columns[2]])
                         if normalize:
                             relevance = (relevance - 1) / 4
                         if item_id not in self.itemTagRelevance:
@@ -75,11 +75,11 @@ class TagRel:
                         first_line = False
                         continue
                     values = line.strip().split(field_separator)
-                    item_id = int(values[0])
-                    tag = values[1].replace("\"", "")
-                    if values[2] == 'NA':
+                    item_id = int(values[columns[0]])
+                    tag = values[columns[1]].replace("\"", "")
+                    if values[columns[2]] == 'NA':
                         continue
-                    relevance = float(values[2])
+                    relevance = float(values[columns[2]])
                     if normalize:
                         relevance = (relevance - 1) / 4
                     if item_id not in self.itemTagRelevance:
@@ -90,7 +90,7 @@ class TagRel:
         self.tags = list(distinct_tags)
         self.items = self.itemTagRelevance.keys()
 
-    def _get_tag_relevance_data(self, file_name, field_separator='\t', include_items=None):
+    def _get_tag_relevance_data(self, file_name, columns, field_separator='\t', include_items=None):
         tag_relevance_data = []
         first_line = True
         rel_items = set()
@@ -101,14 +101,14 @@ class TagRel:
                     first_line = False
                     continue
                 values = line.strip().split(field_separator)
-                item_id = int(values[0])
-                tag = values[1].replace("\"", "")
-                if values[2] == 'NA':
+                item_id = int(values[columns[0]])
+                tag = values[columns[1]].replace("\"", "")
+                if values[columns[2]] == 'NA':
                     continue
                 if include_items.count(item_id) > 0:
                     rel_items.add(item_id)
                     rel_tags.add(tag)
-                    relevance = float(values[2])
+                    relevance = float(values[columns[2]])
                     tag_relevance_data.append((item_id, tag, relevance))
         else:
             for line in open(file_name):
@@ -116,13 +116,13 @@ class TagRel:
                     first_line = False
                     continue
                 values = line.strip().split(field_separator)
-                item_id = int(values[0])
-                tag = values[1].replace("\"", "")
-                if values[2] == 'NA':
+                item_id = int(values[columns[0]])
+                tag = values[columns[1]].replace("\"", "")
+                if values[columns[2]] == 'NA':
                     continue
                 rel_items.add(item_id)
                 rel_tags.add(tag)
-                relevance = float(values[2])
+                relevance = float(values[columns[2]])
                 tag_relevance_data.append((item_id, tag, relevance))
 
         return tag_relevance_data

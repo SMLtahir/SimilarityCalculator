@@ -1,7 +1,7 @@
 # SimilarityCalculator
 
-*Python open source package that computes similarities between a list of items based on their tag relevance scores 
-and prints the top neighbors of each item to file.* 
+*Uses parallel processing and efficient C implementations to quickly compute similarities between a list of items; and 
+prints the top neighbors (most similar items) of each item to file.* 
 
 ##### Travis Continuous Integration Testing status 
 
@@ -264,11 +264,11 @@ The following parameters are to be modified as desired in these files.
 
     *Example entry*:
     
-        "ITEM1_COLUMN_NO": "5"
+        "ITEM1_COLUMN_NO": 4
     
     *Default entry*: 
     
-        "ITEM1_COLUMN_NO": "1"
+        "ITEM1_COLUMN_NO": 0
         
     This parameter tells the program in which column of the .csv/ .tsv *RELEVANCE_PREDICTIONS* file it can find 
     entities belonging to the itemId1 set (as defined earlier). It is particularly useful when the input file is a 
@@ -286,21 +286,22 @@ The following parameters are to be modified as desired in these files.
         
     In this case, if we want to find the top-nearest neighbors of the different movies in our list, we would set
       
-        "ITEM1_COLUMN_NO": "1"
-        "ITEM2_COLUMN_NO": "4"
-        "RELEVANCE_SCORE_COLUMN_NO": "5"
+        "ITEM1_COLUMN_NO": 0
+        "ITEM2_COLUMN_NO": 3
+        "RELEVANCE_SCORE_COLUMN_NO": 4
         
+    **Note**: Column numbering here starts from 0, and not from 1.
     For the description of the two other parameters shown in the example above, see their respective sections below.
     
 10. **ITEM2_COLUMN_NO**
 
     *Example entry*:
     
-        "ITEM2_COLUMN_NO": "4"
+        "ITEM2_COLUMN_NO": 4
     
     *Default entry*: 
     
-        "ITEM2_COLUMN_NO": "2"
+        "ITEM2_COLUMN_NO": 1
         
     This parameter tells the program in which column of the .csv/ .tsv *RELEVANCE_PREDICTIONS* file it can find 
     entities belonging to the itemId2 set (as defined earlier). It is particularly useful when the input file is a 
@@ -312,11 +313,11 @@ The following parameters are to be modified as desired in these files.
 
     *Example entry*:
     
-        "RELEVANCE_SCORE_COLUMN_NO": "1"
+        "RELEVANCE_SCORE_COLUMN_NO": 1
     
     *Default entry*: 
     
-        "RELEVANCE_SCORE_COLUMN_NO": "3"
+        "RELEVANCE_SCORE_COLUMN_NO": 2
     
     This parameter tells the program in which column of the .csv/ .tsv *RELEVANCE_PREDICTIONS* file it can find 
     entities belonging to the relevance_score set (as defined earlier). It is particularly useful when the input file 
