@@ -20,15 +20,23 @@ class PopularityIdfTagWeighting(TagWeighting):
                         first_line = False
                         continue
                     values = line.strip().split('\t')
+                    if len(values) < 2:
+                        if len(self.weightsDict) == 0:
+                            print "Error! Make sure the weights file is in correct format and that the " \
+                                  "field separator is set correctly.\nExiting program."
+                            exit()
+                        else:
+                            print "Warning! Blank line found in weights file. Continuing to next line..."
+                            continue
                     tag = values[0]
-                    weight = int(values[1])
+                    weight = float(values[1])
                     self.weightsDict[tag] = weight
             else:
                 print "Error! Please input a path to valid Tag Weights file to continue."
                 exit()
 
     def get_weight(self, tag):
-        if self.weighted:
+        if self.weighted and tag in self.weightsDict:
             return self.weightsDict[tag]
         else:
             return 1
