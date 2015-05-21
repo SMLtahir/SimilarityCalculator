@@ -10,7 +10,8 @@ class ConfigBase:
 
         if os.path.exists('config/config.test.json'):
             json_test_conf = open('config/config.test.json')
-            self.conf = json.load(json_test_conf)
+            conf_test = json.load(json_test_conf)
+            self.conf.update(conf_test)
             json_test_conf.close()
 
         if os.path.exists('config/config.local.json'):
