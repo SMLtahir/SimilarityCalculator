@@ -1,4 +1,8 @@
 import sys
+import os
+file_path = os.path.dirname((os.path.abspath(__file__))) + "/"
+sys.path.insert(0, file_path)
+
 import argparse
 import time
 import multiprocessing as mp
@@ -24,18 +28,19 @@ def run():
     # Makes a tag_rel object that contains lists of tags, items, an array of itemTagRelevance[itemId] dictionaries
     # that maps a tag to its relevance score for a particular item
     columns = [conf["ITEM1_COLUMN_NO"], conf["ITEM2_COLUMN_NO"], conf["RELEVANCE_SCORE_COLUMN_NO"]]
-    tag_rel = tagrel.TagRel(conf["FILE_RELEVANCE_PREDICTIONS"], columns, field_separator=conf["INPUT_FIELD_SEPARATOR"],
-                            normalize=True)
+    relevance_filepath = file_path + conf["FILE_RELEVANCE_PREDICTIONS"]
+    tag_rel = tagrel.TagRel(relevance_filepath, columns, field_separator=conf["INPUT_FIELD_SEPARATOR"], normalize=True)
     # For testing purposes use below with desired itemIDs
     # includeItems = [1,4886,6377]
-    # tag_rel = tagrel.TagRel(conf["FILE_RELEVANCE_PREDICTIONS"], includeItems, normalize=True, testMode=True)
+    # tag_rel = tagrel.TagRel(relevance_filepath, includeItems, normalize=True, testMode=True)
 
     logger.info("Starting tag_weighting...")
     print "Starting tag_weighting...", time.strftime('%x %X')
     # Does a type of tfidf weighting using docFrequencies and number of distinct taggers per tag per item
-    if conf["TAG_WEIGHTED"].lower() == 't' or conf["TAG_WEIGHTED"].lower() == 'true' or conf["TAG_WEIGHTED"]\
+    weights_filepath = file_path + conf["FILE_TAG_WEIGHTS"]
+    if conf["TAG_WEIGHTED"].lower() == 't' or conf["TAG_WEIGHTED"].lower() == 'true' or conf["TAG_WEIGHTED"] \
             .lower() == 'y' or conf["TAG_WEIGHTED"].lower() == 'yes':
-        tag_weighting = PopularityIdfTagWeighting(weighted=True, weights_dictionary_path=conf["FILE_TAG_WEIGHTS"])
+        tag_weighting = PopularityIdfTagWeighting(weighted=True, weights_dictionary_path=weights_filepath)
     else:
         tag_weighting = PopularityIdfTagWeighting(weighted=False)
 
@@ -60,6 +65,7 @@ def run():
     items = tag_rel.get_items()
 
     logger.info("Writing neighbors and similarities to file...")
+
     print "Writing neighbors and similarities to file...", time.strftime('%x %X')
 
     # Write tab separated: itemId, each top neighbor's itemId and similarity value into file
@@ -72,7 +78,8 @@ def run():
         p = mp.Pool(mp.cpu_count())
     else:
         p = mp.Pool(cpu)
-    with open(conf["FILE_NEIGHBORS"], 'w') as f:
+    neighbors_filepath = file_path + conf["FILE_NEIGHBORS"]
+    with open(neighbors_filepath, 'w') as f:
         for result in p.imap(run_in_parallel, items):
             f.write(result)
 
@@ -89,18 +96,21 @@ def run_in_parallel(item_id):
 
 def load_configuration():
     global conf
-    json_conf = open('config/config.json')
+    json_path = file_path + "config/config.json"
+    json_conf = open(json_path)
     conf = json.load(json_conf)
     json_conf.close()
 
-    if os.path.exists('config/config.test.json'):
-        json_test_conf = open('config/config.test.json')
+    json_test_path = file_path + "config/config.test.json"
+    if os.path.exists(json_test_path):
+        json_test_conf = open(json_test_path)
         conf_test = json.load(json_test_conf)
         conf.update(conf_test)
         json_test_conf.close()
 
-    if os.path.exists('config/config.local.json'):
-        json_loc_conf = open('config/config.local.json')
+    json_loc_path = file_path + "config/config.local.json"
+    if os.path.exists(json_loc_path):
+        json_loc_conf = open(json_loc_path)
         conf_local = json.load(json_loc_conf)
         conf.update(conf_local)
         json_loc_conf.close()
@@ -113,7 +123,8 @@ def load_logger(file_name):
         logger.setLevel(logging.DEBUG)
 
         # create file handler for logging
-        fh = logging.FileHandler(file_name)
+        logfile_path = file_path + file_name
+        fh = logging.FileHandler(logfile_path)
         fh.setLevel(logging.INFO)
 
         # create console handler with a higher log level
