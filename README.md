@@ -16,7 +16,7 @@ stable builds released as code versions.
 
 SimilarityCalculator currently runs on Python versions: *2.6*, *2.7*, *pypy*
 
-##### How to run:
+#### How to run:
 
 First, set **PYTHONPATH** environment variable to your Python bin directory
 
@@ -24,6 +24,8 @@ First, set **PYTHONPATH** environment variable to your Python bin directory
 
 - load_neighbors.py
 - test/unit_tests_load_neighbors.py
+
+###### Run from the command line
 
 LOAD_NEIGHBORS:
 
@@ -44,6 +46,10 @@ To get information about any runnable module:
 
 This will tell you how to run the program along with its available command line parameters.
 
+###### Run from external module (as a function)
+**SimilarityCalculator** can also be run as a function from an external module
+The sample file **runAsFunction.py** located in SimilarityCalculator/data/samples/ should be followed as a model for 
+running the tool from an external module. 
 
 ##### Parallel execution
 
